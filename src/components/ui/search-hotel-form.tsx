@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -5,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { CheckInDatePicker } from "@/components/ui/check-in-date-picker";
 import { CheckOutDatePicker } from "@/components/ui/check-out-date-picker";
 
-export function SearchForm() {
+export function SearchHotelForm() {
     return (
     <Card>
+
         <CardHeader>
             <CardTitle>Search Hotels</CardTitle>
         </CardHeader>
+
         <CardContent>
             <form className="flex justify-center items-center gap-4">
                 
@@ -43,6 +47,7 @@ export function SearchForm() {
                 
             </form>
         </CardContent>
+        
     </Card>
 );
 }
