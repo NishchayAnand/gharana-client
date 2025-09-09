@@ -35,7 +35,7 @@ export function SearchHotelForm() {
         </CardHeader>
 
         <CardContent>
-            <form className="flex justify-center items-center gap-6 flex-wrap">
+            <form className="flex flex-col justify-center items-center gap-6 lg:flex-row lg:flex-wrap">
                 
                 {/* Destination */}
                 <div className="flex flex-col gap-2">
@@ -121,7 +121,7 @@ export function SearchHotelForm() {
                 </div>
 
                 {/* Search Button */}
-                <Button type="submit" className="w-full mt-auto">Search</Button>
+                <Button type="submit" className="w-48 mt-auto">Search</Button>
                 
             </form>
         </CardContent>

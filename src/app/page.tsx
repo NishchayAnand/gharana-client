@@ -7,17 +7,17 @@ export default function Home() {
     <main>
 
       {/* Hero Section */}
-      <section className="w-full h-screen px-10 py-20">
+      <section className="w-full h-screen lg:px-10 lg:py-20">
         <div className="relative w-full h-full">
           {/* Hero Image */}
           <Image
             src="/images/home-page-hero-section.jpg"
             alt="Hero Image"
             fill={true} // makes the image fill the parent container
-            className="object-cover hidden md:block"
+            className="object-cover lg:block"
           />
           {/* Search Hotel Form */}
-          <div className="md:absolute lg:bottom-[-4rem] lg:left-1/2 lg:-translate-x-1/2">
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-1/2 translate-y-1/2 lg:w-[calc(100%-10rem)] lg:bottom-[-4rem] lg:translate-y-0">
             <SearchHotelForm />
           </div>
         </div>
