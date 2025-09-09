@@ -17,7 +17,7 @@ export default function Home() {
             className="object-cover hidden md:block"
           />
           {/* Search Hotel Form */}
-          <div className="md:absolute sm:w-full lg:w-[calc(100%-4rem)] lg:bottom-[-4rem] lg:left-1/2 lg:-translate-x-1/2">
+          <div className="md:absolute lg:bottom-[-4rem] lg:left-1/2 lg:-translate-x-1/2">
             <SearchHotelForm />
           </div>
         </div>
