@@ -11,7 +11,6 @@ import { Calendar } from "@/components/ui/calendar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { Command, CommandList, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { check } from "zod";
 
 // Sample destinations
 const destinations = [
