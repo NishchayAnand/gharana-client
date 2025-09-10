@@ -6,12 +6,12 @@ import { Check, ChevronDownIcon } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { Command, CommandList, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { check } from "zod";
 
 // Sample destinations
 const destinations = [
@@ -30,6 +30,10 @@ type FormValues = {
 };
 
 export function SearchHotelForm() {
+    const [isDestPopOpen, setIsDestPopOpen] = useState(false);
+    const [isCheckInPopOpen, setIsCheckInPopOpen] = useState(false);
+    const [isCheckOutPopOpen, setIsCheckOutPopOpen] = useState(false);
+
     const form = useForm<FormValues>({
         defaultValues: {
             destination: "",
@@ -39,8 +43,25 @@ export function SearchHotelForm() {
     });
 
     function onSubmit(data: FormValues) {
-        // handle form submission
-        console.log(data);
+        // check if destination is empty
+        if(!data.destination) {
+            setIsDestPopOpen(true);
+            return;
+        }
+
+        // check if check-in date is empty
+        if(!data.checkInDate) {
+            setIsCheckInPopOpen(true);
+            return;
+        }
+
+        // check if check-out date is empty
+        if(!data.checkOutDate) {
+            setIsCheckOutPopOpen(true);
+            return;
+        }
+
+        console.log(data.destination, data.checkInDate, data.checkOutDate);
     }
 
     return (
@@ -64,7 +85,7 @@ export function SearchHotelForm() {
                             <FormItem className="flex flex-col gap-2">
                                 <FormLabel>Destination</FormLabel>
                                 <FormControl>
-                                    <Popover>
+                                    <Popover open={isDestPopOpen} onOpenChange={setIsDestPopOpen}>
                                         <PopoverTrigger asChild>
                                             <Button variant="outline" className="w-48 justify-between font-normal">
                                                 {field.value 
@@ -86,7 +107,9 @@ export function SearchHotelForm() {
                                                                 value={dest.value}
                                                                 onSelect={(currentDestination) => {
                                                                     // set the form field value
-                                                                    field.onChange(currentDestination)
+                                                                    field.onChange(currentDestination);
+                                                                    // close the popover
+                                                                    setIsDestPopOpen(false);
                                                                 }}
                                                             >
                                                                 {dest.label}
@@ -109,46 +132,76 @@ export function SearchHotelForm() {
                     />
 
                     {/* Check-in Date */}
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="checkindate">Check-In Date</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="outline" id="checkindate" className="w-48 justify-between font-normal">
-                                    { checkInDate ? checkInDate.toLocaleDateString() : "Select date"}
-                                    <ChevronDownIcon />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                                <Calendar
-                                    mode="single"
-                                    selected={checkInDate}
-                                    captionLayout="dropdown"
-                                    onSelect={setCheckInDate}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                    </div>
+                    <FormField
+                        name="checkInDate"
+                        control={form.control}
+                        render={({ field}) => (
+                            <FormItem className="flex flex-col gap-2">
+                                <FormLabel>Check-In Date</FormLabel>
+                                <FormControl>
+                                    <Popover open={isCheckInPopOpen} onOpenChange={setIsCheckInPopOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" className="w-48 justify-between font-normal">
+                                                { field.value ? field.value.toLocaleDateString() : "Select date"}
+                                                <ChevronDownIcon />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value} 
+                                                captionLayout="dropdown"
+                                                onSelect={(date) => {
+                                                    field.onChange(date);
+                                                    setIsCheckInPopOpen(false);
+                                                }}
+                                                disabled={(date) => date.getTime() < new Date().setHours(0,0,0,0)} // disable dates before today
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
 
                     {/* Check-out Date */}
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="checkoutdate">Check-Out Date</Label>
-                        <Popover>
-                            <PopoverTrigger asChild>
-                                <Button variant="outline" id="checkoutdate" className="w-48 justify-between font-normal">
-                                    { checkOutDate ? checkOutDate.toLocaleDateString() : "Select date"}
-                                    <ChevronDownIcon />
-                                </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
-                                <Calendar
-                                    mode="single"
-                                    selected={checkOutDate}
-                                    captionLayout="dropdown"
-                                    onSelect={setCheckoutDate}
-                                />
-                            </PopoverContent>
-                        </Popover>
-                    </div>
+                    <FormField
+                        name="checkOutDate"
+                        control={form.control}
+                        render={({ field}) => (
+                            <FormItem className="flex flex-col gap-2">
+                                <FormLabel>Check-Out Date</FormLabel>
+                                <FormControl>
+                                    <Popover open={isCheckOutPopOpen} onOpenChange={setIsCheckOutPopOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button variant="outline" className="w-48 justify-between font-normal">
+                                                { field.value ? field.value.toLocaleDateString() : "Select date"}
+                                                <ChevronDownIcon />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                captionLayout="dropdown"
+                                                onSelect={(date) => {
+                                                    field.onChange(date);
+                                                    setIsCheckOutPopOpen(false);
+                                                }}
+                                                disabled={(date) => {
+                                                    const checkInDate = form.getValues("checkInDate");
+                                                    if(!checkInDate) {
+                                                        return true; // Disable all dates if no check-in date is selected
+                                                    }
+                                                    return date <= checkInDate; // Disable dates before or on the check-in date
+                                                }}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    />
 
                     {/* Search Button */}
                     <Button type="submit" className="w-48 mt-auto">Search</Button>
